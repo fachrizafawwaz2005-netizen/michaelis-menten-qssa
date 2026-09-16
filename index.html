@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Michaelis-Menten Kinetics-Fachriza Fawwaz (23/512570/TK/56332)</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 25px;
+            color: #222;
+            line-height: 1.6;
+            background-color: white;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            margin-top: 45px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-top: 0;
+        }
+
+        .equation {
+            background-color: #f5f5f5;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-family: "Times New Roman", serif;
+            font-size: 18px;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            max-width: 550px;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        figure {
+            margin: 30px 0;
+        }
+
+        figure img {
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 0 auto;
+        }
+
+        figcaption {
+            text-align: center;
+            color: #555;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <h1>Michaelis-Menten Kinetics</h1>
+
+    <p class="subtitle">
+        Computational Biology — ODE-based kinetic model and QSSA - Fachriza Fawwaz 
+    </p>
+
+
+    <!-- MODEL -->
+
+    <h2>1. Model</h2>
+
+    <p>
+        The Michaelis-Menten reaction describes the conversion of substrate
+        into product through an enzyme-substrate complex.
+    </p>
+
+    <div class="equation">
+        S + E ⇌ C → P + E
+    </div>
+
+    <p>
+        The reaction consists of substrate (S), enzyme (E),
+        enzyme-substrate complex (C), and product (P).
+        The enzyme conservation relationship is:
+    </p>
+
+    <div class="equation">
+        E<sub>T</sub> = E + C
+    </div>
+
+    <p>
+        Therefore, the free enzyme concentration can be written as:
+    </p>
+
+    <div class="equation">
+        E = E<sub>T</sub> − C
+    </div>
+
+
+    <!-- ODE -->
+
+    <h2>2. Ordinary Differential Equations</h2>
+
+    <p>
+        The reaction system can be represented using ordinary differential
+        equations describing the concentration changes over time.
+    </p>
+
+    <div class="equation">
+        dS/dt =
+        −k<sub>f</sub>S(E<sub>T</sub> − C)
+        + k<sub>r</sub>C
+    </div>
+
+    <div class="equation">
+        dC/dt =
+        k<sub>f</sub>S(E<sub>T</sub> − C)
+        − k<sub>r</sub>C
+        − k<sub>2</sub>C
+    </div>
+
+    <div class="equation">
+        dP/dt =
+        k<sub>2</sub>C
+    </div>
+
+    <p>
+        The equations were solved numerically using Python with the
+        <code>odeint</code> function.
+    </p>
+
+
+    <!-- PARAMETERS -->
+
+    <h2>3. Parameters and Initial Conditions</h2>
+
+    <table>
+
+        <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+        </tr>
+
+        <tr>
+            <td>k<sub>f</sub></td>
+            <td>30</td>
+        </tr>
+
+        <tr>
+            <td>k<sub>r</sub></td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>k<sub>2</sub></td>
+            <td>10</td>
+        </tr>
+
+        <tr>
+            <td>E<sub>T</sub></td>
+            <td>1</td>
+        </tr>
+
+        <tr>
+            <td>Initial S</td>
+            <td>5</td>
+        </tr>
+
+        <tr>
+            <td>Initial C</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>Initial P</td>
+            <td>0</td>
+        </tr>
+
+        <tr>
+            <td>Simulation time</td>
+            <td>0 – 2.5</td>
+        </tr>
+
+    </table>
+
+
+    <!-- FULL MODEL -->
+
+    <h2>4. Full Model Simulation</h2>
+
+    <figure>
+
+        <img
+            src="images/1.png"
+            alt="Full Michaelis-Menten Model"
+        >
+
+        <figcaption>
+            Figure 1. Full Michaelis-Menten model simulation.
+        </figcaption>
+
+    </figure>
+
+    <p>
+        The substrate concentration (S) decreases over time as it is
+        converted into product. The product concentration (P) increases
+        throughout the simulation. The enzyme-substrate complex (C)
+        increases rapidly during the initial phase and then decreases
+        as the substrate becomes depleted.
+    </p>
+
+
+    <!-- QSSA -->
+
+    <h2>5. Quasi-Steady-State Approximation</h2>
+
+    <p>
+        The quasi-steady-state approximation (QSSA) assumes that after
+        the initial transient phase, the concentration of the
+        enzyme-substrate complex changes very slowly.
+    </p>
+
+    <div class="equation">
+        dC/dt ≈ 0
+    </div>
+
+    <p>
+        Starting from the equation for C:
+    </p>
+
+    <div class="equation">
+        dC/dt =
+        k<sub>f</sub>S(E<sub>T</sub> − C)
+        − k<sub>r</sub>C
+        − k<sub>2</sub>C
+    </div>
+
+    <p>
+        Applying the QSSA condition gives:
+    </p>
+
+    <div class="equation">
+        C =
+        k<sub>f</sub>S E<sub>T</sub>
+        /
+        (k<sub>f</sub>S + k<sub>r</sub> + k<sub>2</sub>)
+    </div>
+
+    <p>
+        This expression is then used to calculate the concentration
+        of the enzyme-substrate complex during the simulation.
+    </p>
+
+
+    <!-- QSSA GRAPH -->
+
+    <h2>6. QSSA Simulation</h2>
+
+    <figure>
+
+        <img
+            src="images/2.png"
+            alt="QSSA Model"
+        >
+
+        <figcaption>
+            Figure 2. Michaelis-Menten simulation using QSSA.
+        </figcaption>
+
+    </figure>
+
+
+    <!-- COMPARISON -->
+
+    <h2>7. Comparison Between Full Model and QSSA</h2>
+
+    <figure>
+
+        <img
+            src="images/3.png"
+            alt="Comparison between Full Model and QSSA"
+        >
+
+        <figcaption>
+            Figure 3. Comparison of the full model and QSSA model.
+        </figcaption>
+
+    </figure>
+
+    <p>
+        The full model and QSSA model show a difference during the
+        initial phase of the simulation. In the full model, the initial
+        concentration of C is zero and the complex must first form.
+        In contrast, the QSSA model directly estimates C from the
+        quasi-steady-state relationship.
+    </p>
+
+    <p>
+        After the initial transient phase, the behavior of the two
+        models becomes similar. This indicates that the QSSA can be
+        used to approximate the system after the initial transient.
+    </p>
+
+
+    <!-- dC/dt -->
+
+    <h2>8. Change in Complex Concentration</h2>
+
+    <figure>
+
+        <img
+            src="images/4.png"
+            alt="dC/dt"
+        >
+
+        <figcaption>
+            Figure 4. Change in the enzyme-substrate complex concentration,
+            represented by dC/dt.
+        </figcaption>
+
+    </figure>
+
+    <p>
+        The value of dC/dt changes rapidly during the beginning of the
+        simulation. It then approaches zero as the system reaches the
+        quasi-steady-state region. This behavior supports the use of
+        the QSSA assumption after the initial transient phase.
+    </p>
+
+
+    <!-- CONCLUSION -->
+
+    <h2>9. Conclusion</h2>
+
+    <p>
+        The Michaelis-Menten reaction can be represented as a dynamic
+        system using ordinary differential equations. The full model
+        describes the changes in substrate, enzyme-substrate complex,
+        and product concentrations over time.
+    </p>
+
+    <p>
+        The QSSA simplifies the model by assuming that dC/dt is
+        approximately zero after the initial transient phase.
+        The comparison between the full model and QSSA shows that
+        the two models have similar behavior after this initial phase.
+    </p>
+
+
+    <div class="footer">
+
+        Computational Biology — Michaelis-Menten Kinetics
+
+    </div>
+
+</body>
+</html>
